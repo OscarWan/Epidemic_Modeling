@@ -12,4 +12,4 @@ Newman's Spread of epidemic disease on networks
 
 ![](https://latex.codecogs.com/png.latex?T&space;=&space;1-(1-\beta)^{\gamma}&space;\text{&space;where&space;}&space;\beta&space;=&space;0.5,&space;\gamma&space;=&space;5&space;\text{&space;in&space;our&space;simulation})
 
-See details in the notebook ![here](https://github.com/OscarWan/Epidemic_Modeling/blob/master/code/BA%20Percolation.ipynb).
+See details in the notebook [here](https://github.com/OscarWan/Epidemic_Modeling/blob/master/code/BA%20Percolation.ipynb).
