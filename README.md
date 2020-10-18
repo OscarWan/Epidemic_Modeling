@@ -27,3 +27,11 @@ We can get awareness by ![](https://latex.codecogs.com/png.latex?\rho(t)=\sum_k&
 Related papers are posted [here](https://aip.scitation.org/doi/10.1063/1.3673573) and [here](https://journals.aps.org/prl/pdf/10.1103/PhysRevLett.86.3200).
 
 See details of the code [here](https://github.com/OscarWan/Epidemic_Modeling/blob/master/code/awareness.py).
+
+## False Test and Possible Quarantine Strategy
+
+Related Article [here](https://www.medrxiv.org/content/10.1101/2020.07.06.20147702v1)
+
+## Interconnection Between Different Groups
+
+Related Article [here](https://arxiv.org/pdf/1201.6339.pdf)
