@@ -1,4 +1,4 @@
-# Epidemic_Modeling
+# Epidemic Modeling
 This project aims to simulate COVID-19 with a relative small range by designing a kitchensink model. Our group constructs a stochastic SIR model with scale-free network. Several customized parameters are designed to realize different function.
 
 ## Exploration of Newman's Theory
@@ -26,4 +26,4 @@ We can get awareness by ![](https://latex.codecogs.com/png.latex?\rho(t)=\sum_k&
 
 Related papers are posted [here](https://aip.scitation.org/doi/10.1063/1.3673573) and [here](https://journals.aps.org/prl/pdf/10.1103/PhysRevLett.86.3200).
 
-See details of the code here.
+See details of the code [here](https://github.com/OscarWan/Epidemic_Modeling/blob/master/code/awareness.py).
