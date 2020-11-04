@@ -30,6 +30,13 @@ See details of the code [here](https://github.com/OscarWan/Epidemic_Modeling/blo
 
 ## False Test and Possible Quarantine Strategy
 
+Here is the part where our research went into some wrong places. At first I was inspired by [this paper](https://www.medrxiv.org/content/10.1101/2020.07.06.20147702v1) and applied this model into our owns. There are few importent features for this model.
+1. The false test. This article introduces the concept of test sensitivity - the accuracy to get a right result for a positive/negative participant. In our model, we finally decided to use 100% for positive patients and [70%, 80%, 90%] accuracy for negative participants.
+2. The quarantine and delay-testing strategy. This was some place where we may have different understanding. According to this article, the quarantine and test procedure goes like this: lets define the delay time as 1 day in convenience. A participant takes the test at day N, then at day N+1 he will get the result whether he is infected or not. If the result is negative, nothing will happen. If the result is positive, then he will be moved into quarantined group Q (with status change) and will get the second test. Finally at N+2 day, the participant will go to recovered group R if the result is again positive, or he will go to his original status if the result is negative.
+And my code is basically following this article.
+
+Later in our discussion, we decided to simplify the process (using the same condition above): A participant takes the test at day N, then at day N+1 he will get the result whether he is infected or not. If the result is negative, nothing will happen. If the result is positive, then he will be moved into removed group R. I didn't implement this strategy in my final code.
+
 Related Article [here](https://www.medrxiv.org/content/10.1101/2020.07.06.20147702v1)
 
 ## Interconnection Between Different Groups
