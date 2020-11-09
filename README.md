@@ -1,5 +1,5 @@
 # Epidemic Modeling
-This project aims to simulate COVID-19 with a relative small range by designing a kitchensink model. Our group constructs a stochastic SIR model with scale-free network. Several customized parameters are designed to realize different function.
+This project aims to simulate COVID-19 with a relative small range by designing a kitchen sink model. Our group constructs a stochastic SIR model with scale-free network. Several customized parameters are designed to realize different function.
 
 ## Exploration of Newman's Theory
 Newman's Spread of epidemic disease on networks
@@ -41,6 +41,6 @@ I don't have Xuliang's code, so I first upload [my version](https://github.com/O
 
 ## Interconnection Between Different Groups
 
-By the end of the last session, we have had a brief picture of this topic. If I understand correct, it implies that for a sample pool with several different groups (like students and teachers), reducing interconnection between groups can effectively prevent pandemic for the whole pool, no matter how the inner situation is. But we failed to determined how to apply this theory into our existing model. Since this part is responded by Xuliang, I didn't have notebook code for this theory.
+By the end of the last session, we have had a brief picture of this topic. If I understand it correctly, it implies that for a sample pool with several different groups (like students and teachers), reducing interconnection between groups can effectively prevent pandemic for the whole pool, no matter how the inner situation is. But we failed to determined how to apply this theory into our existing model. Since this part is responded by Xuliang, I didn't have notebook code for this theory.
 
 Related Article [here](https://arxiv.org/pdf/1201.6339.pdf)
