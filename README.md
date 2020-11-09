@@ -37,8 +37,10 @@ And my code is basically following this article.
 
 Later in our discussion, we decided to simplify the process (using the same condition above): A participant takes the test at day N, then at day N+1 he will get the result whether he is infected or not. If the result is negative, nothing will happen. If the result is positive, then he will be moved into removed group R. I didn't implement this strategy in my final code.
 
-Related Article [here](https://www.medrxiv.org/content/10.1101/2020.07.06.20147702v1)
+I don't have Xuliang's code, so I first upload [my version](https://github.com/OscarWan/Epidemic_Modeling/blob/master/code/delaying_test.py).
 
 ## Interconnection Between Different Groups
+
+By the end of the last session, we have had a brief picture of this topic. If I understand correct, it implies that for a sample pool with several different groups (like students and teachers), reducing interconnection between groups can effectively prevent pandemic for the whole pool, no matter how the inner situation is. But we failed to determined how to apply this theory into our existing model. Since this part is responded by Xuliang, I didn't have notebook code for this theory.
 
 Related Article [here](https://arxiv.org/pdf/1201.6339.pdf)
