@@ -63,8 +63,9 @@ def network_iter(G,q,inf_init,N=4000,M=800,b=0.075,b2=0.06,gamma=0.2,neg_sen=0.8
     is_detected = False
     detected_day = 0
 
-    # begin the loop until the first positive case is detected
+    # begin the loop
     while len(infected)>0:
+        # After the detection the b will change to b2
         if finished == False:
             b = b
         elif finished == True:
@@ -84,10 +85,11 @@ def network_iter(G,q,inf_init,N=4000,M=800,b=0.075,b2=0.06,gamma=0.2,neg_sen=0.8
 
         new_removed = []
 
+        # After gamma_inverse=5 days the I node will move to R
         for inf in infected:
             G.nodes[inf]['inf_dur']=G.nodes[inf]['inf_dur']+dt
 
-            if G.nodes[inf]['inf_dur']>=gamma_inverse:
+            if G.nodes[inf]['inf_dur']>gamma_inverse:
                 new_removed.append(inf)
                 I=I-1
                 R=R+1
@@ -119,31 +121,24 @@ def network_iter(G,q,inf_init,N=4000,M=800,b=0.075,b2=0.06,gamma=0.2,neg_sen=0.8
         S_record.append(len(suscep))
         Q_record.append(len(quarantine))
 
+        # Record the day when the first patient is detected
         if finished:
             if not is_detected:
                 detected_day = counter
                 is_detected = True
 
+        # Record maximum of infected cases (I nodes) and that day
         TotalCases = len(infected)
         if TotalCases > peak_cases:
             peak_cases = TotalCases
             peak_time = counter
 
-    return S_record,I_record,R_record,Q_record,peak_cases,peak_time,detected_day#,G,infected,quarantine,removed,suscep
-
-# def after_outbreak(S_record,I_record,R_record,Q_record,E_record,TotalCases,G,infected,quarantine,removed,suscep,incubation):
-
+    return S_record,I_record,R_record,Q_record,peak_cases,peak_time,detected_day
 
 def divide_test(counter,q,test_list):
-    # Compare the first and the last index for each time step. Explain by example
-    # N = 5, test_list = [1,2,3,4,5], q=2(everyday testing number)
-    # When counter = 2, the first index is (q*counter)%N=4, and the last index is
-    # (q*(counter+1))%N=1
-    # Since the first is larger than the last, we concatenate the list by [5]+[1]=[5,1]
-    # if (q*counter)%N < (q*(counter+1))%N:
-    #     return test_list[(q*counter)%N:(q*(counter+1))%N]
-    # elif (q*counter)%N >= (q*(counter+1))%N:
-    #     return list(test_list[(q*counter)%N:])+list(test_list[:(q*(counter+1))%N])
+    # In a testing period 7 days, all nodes in test_list (q parameter in our previous discussion)
+    # will be tested. In the first 5 days in one testing period, nodes will be tested, while in the
+    # last 2 days no nodes will be tested (considered as weekend).
     test_number = q//5
     if counter%7 < 4:
         return test_list[test_number*(counter%7):test_number*((counter+1)%7)]
@@ -153,10 +148,16 @@ def divide_test(counter,q,test_list):
         return []
 
 def delay_test(G,N,dt,neg_sen,S,I,R,Q,test_subjects,delay,infected,quarantine,removed,suscep,finished,test_list):
+    # In every iteration, the activate node (i.e. node with attribute "test_day" changing from None to 0)
+    # will increase 1 day.
     for node in range(N):
         if str.isdigit(str(G.nodes[node]['test_day'])):
-            G.nodes[node]['test_day'] += dt
+            G.nodes[node]['test_day'] += 1
 
+    # When the node is tested, the result comes out immediately recorded in attribute "result",
+    # while the result can only be checked by us, not nodes in the simulation. Since the "status"
+    # doesn't change, the I node will keep infecting others while S node will keep being infected.
+    # "test_day" changes from None to 0 to activate the testing node to the delaying-test list.
     for t in test_subjects:
         if G.nodes[t]['status'] in ['infected', 'removed']:
             G.nodes[t]['result'] = 'quarantined_pos'
@@ -167,7 +168,8 @@ def delay_test(G,N,dt,neg_sen,S,I,R,Q,test_subjects,delay,infected,quarantine,re
                 G.nodes[t]['result'] = 'quarantined_neg'
                 G.nodes[t]['test_day'] = 0
 
-    count = 0
+    # When "test_day" reaches parameter "delay", "status" of this node will be changed to "quarantine"
+    # if the result is positive.
     for node in range(N):
         if G.nodes[node]['test_day'] == delay:
             G.nodes[node]['test_day'] = None
@@ -191,6 +193,7 @@ def delay_test(G,N,dt,neg_sen,S,I,R,Q,test_subjects,delay,infected,quarantine,re
                     G.nodes[node]['status'] = 'quarantined'
                     quarantine.append(node)
                     suscep.remove(node)
+                # Perhaps the susceptible node has already turned to infected
                 elif G.nodes[node]['status'] == 'infected':
                     Q += 1
                     I -= 1
@@ -204,45 +207,9 @@ def delay_test(G,N,dt,neg_sen,S,I,R,Q,test_subjects,delay,infected,quarantine,re
 
 
 if __name__ == '__main__':
-    # delay_list = [1,2,3]
-    #
-    # for delay in delay_list:
-    #     all_cases = []
-    #     c= []
-    #     max_len = 0
-    #     for round in range(100):
-    #         with open('G.pickle', 'rb') as f:
-    #             G = pickle.load(f)
-    #
-    #         with open('inf_sample.pickle', 'rb') as f:
-    #             infectious = pickle.load(f)
-    #         init_inf = random.sample(infectious,1)
-    #         S,I,R,Q,cases,counter= network_iter(G,50,init_inf,delay=delay)
-    #         c.append(I)
-    #         if len(I) >= max_len:
-    #             max_len = len(I)
-    #     for l in c:
-    #         while len(l) < max_len:
-    #             l.append('N')
-    #     for k in range(max_len):
-    #         total = 0
-    #         count = 0
-    #         for l in c:
-    #             if l[k] != 'N':
-    #                 total += l[k]
-    #                 count += 1
-    #         avg = total / count
-    #         all_cases.append(avg)
-    #
-    #     with open('test_delay'+''.join(str(b2).split('.'))+'day_after_outbreak.pickle', 'wb') as f:
-    #         pickle.dump(all_cases,f)
-
-
-
-    # all_q = np.arange(10,600,20)
-    delay_list = [1,2,3]
-    b_list = [0.015,0.025,0.05,0.075]
-    test_total = [800,2000,3600]
+    delay_list = [1]#,2,3]
+    b_list = [0.075]#,0.025,0.05,0.075]
+    test_total = [800]#,2000,3600]
 
     for delay in delay_list:
         for b in b_list:
@@ -250,12 +217,19 @@ if __name__ == '__main__':
             all_cases= []
             for test_pool in test_total:
                 c1,c2,c3=[],[],[]
-                for round in range(100):
-                    with open('G.pickle', 'rb') as f:
-                        G = pickle.load(f)
+                for round in range(2):
+                    N=4000           #population
+                    m=3
+                    G = nx.barabasi_albert_graph(N,m)               #create graph
 
-                    with open('inf_sample.pickle', 'rb') as f:
-                        infectious = pickle.load(f)
+                    infectious = []
+                    N_nodes = set(np.arange(0,N,1))
+
+                    for i in np.arange(1,300,3):
+                        s = set(n for n in N_nodes if len(G[n].keys())>=i and len(G[n].keys())<=i+2)
+                        if len(s)!=0:
+                            inf = random.sample(s,1)
+                            infectious.append(inf[0])
                     init_inf = random.sample(infectious,1)
                     S,I,R,Q,peak_cases,peak_time,detected_day = network_iter(G,test_pool,init_inf,b=b,b2=b2,delay=delay)
                     c1.append(peak_cases)
@@ -264,19 +238,19 @@ if __name__ == '__main__':
                 all_cases.append(c1)
                 all_cases.append(c2)
                 all_cases.append(c3)
-
                 with open('delay_'+str(delay)+'_day_and_b_with_'+''.join(str(b).split('.'))+'_and_pool_'+str(test_pool)+'.pickle', 'wb') as f:
                     pickle.dump(all_cases,f)
 
-    with open('delay_1_day_and_b_with_0075_and_pool_3600.pickle', 'rb') as f:
+    with open('delay_1_day_and_b_with_0075_and_pool_800.pickle', 'rb') as f:
         decrease1 = pickle.load(f)
+    x=range(2)
     fig,ax = plt.subplots()
-    average = np.mean(decrease1[1])
-    plt1 = ax.bar(x=range(len(decrease1[0])),height=decrease1[0],label='before_b=0.075')
-    ax.plot(range(100),[average]*100,color='red',label='average={}'.format(average))
+    average = np.mean(decrease1[0])
+    plt1 = ax.bar(x=x,height=decrease1[0],label='before_b=0.075')
+    ax.plot(x,[average]*2,color='red',label='average={}'.format(average))
     ax.set_xlabel('Simulation round')
     ax.set_ylabel('Peak cases')
-    ax.set_title('Delay 1 day testing with 90% population')
+    plt.xticks([index for index in x], x)
+    ax.set_title('Delay 1 day testing with 20% population')
     ax.legend()
     ax.grid()
-    plt.savefig('delay_1_b_0075_pool_09_peak_cases.png')
